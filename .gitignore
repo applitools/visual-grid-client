@@ -67,3 +67,5 @@ typings/
 .applitools
 
 .idea/
+
+test/fixtures/test-app/dist/
