@@ -59,5 +59,10 @@ describe('createResourceCache', () => {
     cache.setValue('a', 'aaa');
     cache.setDependencies('a', ['a']);
     expect(cache.getWithDependencies('a')).to.eql({a: 'aaa'});
+
+    cache.setDependencies('a', ['b']);
+    cache.setValue('b', 'bbb');
+    cache.setDependencies('b', ['a'])
+    expect(cache.getWithDependencies('a')).to.eql({a: 'aaa', b: 'bbb'});
   });
 });
