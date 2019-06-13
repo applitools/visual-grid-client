@@ -22,20 +22,24 @@ function createResourceCache() {
   }
 
   function getWithDependencies(key) {
-    const entry = cache[key];
-    if (!entry || !entry.value) return;
-
     const ret = {};
-    ret[key] = entry.value;
-    if (entry.dependencies) {
-      entry.dependencies.forEach(dep => {
-        // stop condition to avoid infinite recursion
-        if (!ret[dep]) {
-          Object.assign(ret, getWithDependencies(dep));
-        }
-      });
+
+    function resolveDependencies(key) {
+      const entry = cache[key];
+      if (!entry || !entry.value) return;
+
+      ret[key] = entry.value;
+      if (entry.dependencies) {
+        entry.dependencies.forEach(dep => {
+          // stop condition to avoid infinite recursion
+          if (!ret[dep]) {
+            Object.assign(ret, resolveDependencies(dep));
+          }
+        });
+      }
+      return ret;
     }
-    return ret;
+    return resolveDependencies(key);
   }
 
   function remove(key) {
